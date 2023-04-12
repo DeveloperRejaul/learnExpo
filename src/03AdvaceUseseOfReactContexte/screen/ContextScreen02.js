@@ -3,21 +3,16 @@ import React from "react";
 import { useUserContext } from "../userContext.js";
 
 const ContextScreen02 = () => {
-  const { user, setUser } = useUserContext();
-
-  const setNewUserAge = () => {
-    setUser((pre) => {
-      return {
-        ...pre,
-        age: "30",
-      };
-    });
-  };
+  const { state, dispatch } = useUserContext();
 
   return (
     <View>
-      <Text>Age : {user.age}</Text>
-      <Text onPress={setNewUserAge}>Set New Age </Text>
+      <Text>Age : {state.age}</Text>
+      <Text
+        onPress={() => dispatch({ type: "change_user_age", payload: "50" })}
+      >
+        Set New Age
+      </Text>
     </View>
   );
 };

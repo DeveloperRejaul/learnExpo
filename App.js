@@ -1,12 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
-import ReduxToolKitRtkQuery from "./src/02ReduxToolkitRtkQuary/index.js";
+import FirebaseRealTimeDataBase from "./src/05FireBaseRealtimeDatabassCROD/index.js";
 
 export default function App() {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <ReduxToolKitRtkQuery />
+      <FirebaseRealTimeDataBase />
     </View>
   );
 }

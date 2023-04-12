@@ -3,20 +3,18 @@ import React from "react";
 import { useUserContext } from "../userContext.js";
 
 export default function ContextScreen01() {
-  const { user, setUser } = useUserContext();
+  const { state, dispatch } = useUserContext();
 
-  const setNewUser = () => {
-    setUser((pre) => {
-      return {
-        ...pre,
-        name: "kamal Mia",
-      };
-    });
-  };
   return (
     <View>
-      <Text>User Name : {user.name}</Text>
-      <Text onPress={setNewUser}>Set new user</Text>
+      <Text>User Name : {state.name}</Text>
+      <Text
+        onPress={() => {
+          dispatch({ type: "change_user_name", payload: "Kamal Mia" });
+        }}
+      >
+        Set new user
+      </Text>
     </View>
   );
 }
