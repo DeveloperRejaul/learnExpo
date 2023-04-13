@@ -1,12 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
-import FireBaseStore from "./src/06FirebadeFireStoreDatabaseCROD/Index.js";
+import FireBaseStores from "./src/07FirebaseStores/index.js";
 
 export default function App() {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <FireBaseStore />
+      <FireBaseStores />
     </View>
   );
 }
