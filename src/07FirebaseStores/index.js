@@ -29,7 +29,6 @@ export default function index() {
         const storage = getStorage(app);
         const storageRef = ref(storage, filename);
         const uploadTask = uploadBytesResumable(storageRef, blob);
-        // const ref = firebase.storage().ref().child(filename).put(blob);
 
         try {
             await uploadTask;
