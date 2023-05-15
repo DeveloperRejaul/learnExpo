@@ -1,4 +1,4 @@
-import { DECREMENT, INCREMENT, FETCHED_DATA } from "./action";
+import { DECREMENT, INCREMENT, FETCHED_DATA, FETCHED_POST } from "./action";
 
 const initialState = { value: 0, posts: [] };
 
@@ -36,6 +36,14 @@ export function counterReducer(state = initialState, action) {
 
         // receiving middleware dispatch data
         case FETCHED_DATA:
+            return {
+                ...state,
+                posts: [...payload],
+            };
+            break;
+
+        // receiving reusable middleware dispatch POST
+        case FETCHED_POST:
             return {
                 ...state,
                 posts: [...payload],

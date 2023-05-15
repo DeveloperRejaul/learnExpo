@@ -3,6 +3,7 @@ import React from "react";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { decrement, fetchData, increment } from "./action";
 import { ScrollView } from "react-native";
+import { fetchPost } from "./API_ACTION_FUNCTION";
 
 const Screen1 = (props) => {
     // With Out Hook
@@ -20,6 +21,7 @@ const Screen1 = (props) => {
     return (
         <ScrollView contentContainerStyle={{ flex: 1 }}>
             <Stack flex={"1"} justifyContent={"center"} alignItems={"center"}>
+                {/* With Hoo */}
                 <Text>With Hook</Text>
                 <Text>Count {value}</Text>
                 <Text onPress={() => dispatch(increment())}>Increment</Text>
@@ -32,7 +34,7 @@ const Screen1 = (props) => {
                     Decrement With Value
                 </Text>
 
-                {/*  */}
+                {/* With Out Hoo */}
                 <Text>With Out Hook</Text>
                 <Text>Count {WH_value}</Text>
                 <Text onPress={() => WH_increment()}>Increment</Text>
@@ -44,6 +46,7 @@ const Screen1 = (props) => {
                     Decrement With Value
                 </Text>
 
+                {/* Handle Async Task */}
                 <Text>Handle Async Task</Text>
                 <Text onPress={() => dispatch(fetchData())}>Get Data</Text>
                 {posts?.map((data) => (
@@ -52,6 +55,10 @@ const Screen1 = (props) => {
                         <Text>{data.title}</Text>
                     </Box>
                 ))}
+
+                {/* Reusable Middleware handle and using thunk  */}
+                <Text>Reusable Middleware handle</Text>
+                <Text onPress={() => dispatch(fetchPost)}>Get Post</Text>
             </Stack>
         </ScrollView>
     );

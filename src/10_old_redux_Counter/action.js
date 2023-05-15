@@ -1,10 +1,6 @@
 export const INCREMENT = "increment";
 export const DECREMENT = "decrement";
 
-// For data fetching
-export const FETCH_DATA = "fetchData";
-export const FETCHED_DATA = "fetchEDData";
-
 export const increment = (value) => {
     return {
         type: INCREMENT,
@@ -19,9 +15,10 @@ export const decrement = (value) => {
     };
 };
 
-// For data fetching
-
-// this action call from screen1
+// #For data fetching
+// ##this action call from screen1
+export const FETCH_DATA = "fetchData";
+export const FETCHED_DATA = "fetchedData";
 export const fetchData = (value) => {
     return {
         type: FETCH_DATA,
@@ -29,10 +26,19 @@ export const fetchData = (value) => {
     };
 };
 
-// this action call from middleware
+// ##this action call from middleware
 export const fetchedData = (value) => {
     return {
         type: FETCHED_DATA,
+        payload: value,
+    };
+};
+
+//action for  handle async task  reusable Middleware
+export const FETCHED_POST = "fetchedPost";
+export const fetchedPost = (value) => {
+    return {
+        type: FETCHED_POST,
         payload: value,
     };
 };

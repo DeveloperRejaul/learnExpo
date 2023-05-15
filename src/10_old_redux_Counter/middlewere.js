@@ -21,3 +21,11 @@ export const getData = (store) => (next) => async (action) => {
     }
     return next(action);
 };
+
+// handle async task reusable Middleware // custom thank // don't need this when use thunk
+export const apiAsyncMiddleware = (store) => (next) => async (action) => {
+    if (typeof action == "function") {
+        return action(store.dispatch, store.getState);
+    }
+    return next(action);
+};
