@@ -1,4 +1,3 @@
-import { StyleSheet } from "react-native";
 import React from "react";
 import { AddIcon, Box, Button, Container, HStack, Text } from "native-base";
 import { Item, width } from "./Items";
@@ -33,5 +32,3 @@ export default function TodosView({ navigation }) {
         </Container>
     );
 }
-
-const styles = StyleSheet.create({});
