@@ -2,7 +2,10 @@ import { StatusBar } from "expo-status-bar";
 import Navigation from "./src/09_MobX_CRUD_APP/Navigation.js";
 import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
-import Index from "./src/10_old_redux_Counter/index.js";
+import Index from "./src/12_rtk_advence/index.js";
+import { Provider } from "react-redux";
+import { store } from "./src/12_rtk_advence/app/store.js";
+// import Index from "./src/11_oldReduxCrud/index.js";
 
 export default function App() {
     return (
@@ -10,8 +13,9 @@ export default function App() {
             <StatusBar style="auto" />
             {/* <NavigationContainer> */}
             <NativeBaseProvider>
-                {/* <Navigation /> */}
-                <Index />
+                <Provider store={store}>
+                    <Index />
+                </Provider>
             </NativeBaseProvider>
             {/* </NavigationContainer> */}
         </>
