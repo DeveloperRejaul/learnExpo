@@ -2,6 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const taskRoute = require("./route/taskRoute");
+const videoRoute = require("./route/videoRoute");
+const tagRoute = require("./route/tagRoute");
+
 const app = express();
 const port = process.env.PORT || 3001;
 const connectMongoDB = async () => {
@@ -20,5 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/task", taskRoute);
+app.use("/api/video", videoRoute);
+app.use("/api/tag", tagRoute);
 app.get("/", (req, res) => res.send("Hello World!"));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

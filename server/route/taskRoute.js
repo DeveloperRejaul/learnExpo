@@ -3,7 +3,7 @@ const {
     deleteTaskController,
     getTaskController,
     updateTaskController,
-} = require("../controler/taskController");
+} = require("../controller/taskController");
 
 const router = require("express").Router();
 
