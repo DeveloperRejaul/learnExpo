@@ -7,7 +7,7 @@ const VideoSchema = new mongoose.Schema({
     avatar: { type: String },
     author: { type: String },
     duration: { type: String },
-    views: { type: Number },
+    views: { type: Number, default: 0 },
 });
 
 const Video = mongoose.model("video", VideoSchema);

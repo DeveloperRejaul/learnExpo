@@ -5,7 +5,7 @@ const initialState = {
     isLoading: false,
     error: null,
 };
-const base_url = `http://192.168.34.182:3004/api`;
+const base_url = `http://192.168.186.182:3004/api`;
 
 // handle async thank fetch task
 const FETCH_TASKS = "task/fetchTask";
