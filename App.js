@@ -1,22 +1,22 @@
 import { StatusBar } from "expo-status-bar";
-import Navigation from "./src/09_MobX_CRUD_APP/Navigation.js";
-import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
-// import Index from "./src/12_rtk_advence/index.js";
-// import Index from "./src/11_oldReduxCrud/index.js";
+import RtkCashingBehavior from "./src/15.rtkQuaryCashingVhaibiar/Index";
+import { NavigationContainer } from "@react-navigation/native";
 import { Provider } from "react-redux";
-import { store } from "./src/12_rtk_advence/app/store.js";
-import Index from "./src/13_Video_player/index.js";
+import { store } from "./src/15.rtkQuaryCashingVhaibiar/rtk/app/store";
 
 export default function App() {
     return (
         <>
             <StatusBar style="auto" />
-            {/* <NavigationContainer> */}
-            <NativeBaseProvider>
-                <Index />
-            </NativeBaseProvider>
-            {/* </NavigationContainer> */}
+
+            <Provider store={store}>
+                <NativeBaseProvider>
+                    <NavigationContainer>
+                        <RtkCashingBehavior />
+                    </NavigationContainer>
+                </NativeBaseProvider>
+            </Provider>
         </>
     );
 }
