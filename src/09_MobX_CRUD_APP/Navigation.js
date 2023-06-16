@@ -7,6 +7,7 @@ import TodosView from "./TodosView";
 
 export default function Navigation() {
     const Stack = createNativeStackNavigator();
+    console.log("I'm  Navigation Component");
 
     return (
         <Stack.Navigator>

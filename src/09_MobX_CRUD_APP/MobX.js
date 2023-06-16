@@ -1,9 +1,14 @@
-import { makeAutoObservable } from "mobx";
+import { action, makeAutoObservable, observable } from "mobx";
 
 class Todo {
     todos = [{ title: "demo", disc: "discDemo" }];
     constructor() {
-        makeAutoObservable(this);
+        makeAutoObservable(this, {
+            todos: observable,
+            add: action,
+            delete: action,
+            update: action,
+        });
     }
 
     add(title, disc) {

@@ -7,6 +7,8 @@ import { useNavigation } from "@react-navigation/native";
 
 export const { width } = Dimensions.get("screen");
 export const Item = observer(() => {
+    console.log("I'm  Item Component");
+
     const navigation = useNavigation();
 
     return (

@@ -4,6 +4,8 @@ import { Item, width } from "./Items";
 const buttonWidth = 110;
 
 export default function TodosView({ navigation }) {
+    console.log("I'm  Todo View Component");
+
     return (
         <Container flex={"1"}>
             <Item />
