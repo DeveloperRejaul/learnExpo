@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { buttonHeight, buttonWidth } from "../../constants";
+import { buttonHeight, buttonWidth } from "./constants";
 
 export default function Button({ text, onPress }) {
     return (

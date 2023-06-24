@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import Button from "./ButtonCom";
-import { width } from "../../constants";
+import { width } from "./constants";
 import { Input } from "native-base";
 import { todoStore } from "./store/todoStore";
 import { observer } from "mobx-react-lite";

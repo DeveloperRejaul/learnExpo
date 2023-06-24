@@ -2,20 +2,22 @@ import { StatusBar } from "expo-status-bar";
 import { NativeBaseProvider } from "native-base";
 import { NavigationContainer } from "@react-navigation/native";
 import { Provider } from "react-redux";
-import { store } from "./src/15.rtkQuaryCashingVhaibiar/rtk/app/store";
-import Navigation from "./src/tutorial/MobX/Part_01/Navigation";
+import Index from "./src/16_rtk_pessimistic_manual_cache_update/screen/Index";
+import { store } from "./src/16_rtk_pessimistic_manual_cache_update/rtk/app/store";
 
-export default function App() {
+const App = () => {
     return (
         <>
             <StatusBar style="auto" />
             <Provider store={store}>
                 <NativeBaseProvider>
-                    <NavigationContainer>
-                        <Navigation />
-                    </NavigationContainer>
+                    {/* <NavigationContainer> */}
+                    <Index />
+                    {/* </NavigationContainer> */}
                 </NativeBaseProvider>
             </Provider>
         </>
     );
-}
+};
+
+export default App;

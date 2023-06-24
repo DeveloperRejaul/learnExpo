@@ -3,9 +3,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Screen1 from "./screen/Sreeen1";
 import Screen2 from "./screen/Screen2";
-import { Text } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 import { showModel } from "./rtk/features/addTask/addSlice";
+
 const Stack = createNativeStackNavigator();
 
 export default function RtkCashingBehavior() {
@@ -18,7 +19,11 @@ export default function RtkCashingBehavior() {
                 name="screen1"
                 options={{
                     headerRight: () => (
-                        <Text onPress={() => dispatch(showModel())}>Add </Text>
+                        <TouchableOpacity>
+                            <Text onPress={() => dispatch(showModel())}>
+                                Add
+                            </Text>
+                        </TouchableOpacity>
                     ),
                 }}
             />
