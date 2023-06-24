@@ -16,11 +16,24 @@ const createTaskController = async (req, res) => {
 };
 
 const getTaskController = async (req, res) => {
-    const { limit } = req.query;
+    const { limit, page, search } = req.query;
+    const skip = Number(limit) * Number(page);
 
     try {
-        const newTask = await Task.find()?.limit(Number(limit));
-        res.status(200).send({ newTask });
+        if (search === undefined) {
+            const totalLength = (await Task.find()).length;
+            const newTask = await Task.find()
+                ?.skip(Number(skip))
+                ?.limit(Number(limit));
+            res.status(200).send({ newTask, totalLength });
+        } else if (search !== undefined) {
+            const newTask = await Task.find({
+                title: { $regex: search, $options: "i" },
+            })
+                ?.skip(Number(skip))
+                ?.limit(Number(limit));
+            res.status(200).send({ newTask });
+        }
     } catch (error) {
         console.log(error);
     }

@@ -8,9 +8,68 @@ export const taskApi = createApi({
     endpoints: (builder) => ({
         getTask: builder.query({
             query: () => ({
-                url: "/task?limit=10",
+                url: `/task?page=0&limit=10`,
             }),
+
+            // Modify response with `transformResponse`
+            // transformResponse(res, meta) {},
         }),
+
+        getTaskPerPage: builder.query({
+            query: ({ page, limit }) => {
+                return { url: `/task?page=${page}&limit=${limit}` };
+            },
+            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    var pagePatchResult = dispatch(
+                        taskApi.util.updateQueryData(
+                            "getTask",
+                            undefined,
+                            (draft) => {
+                                const newData = [
+                                    ...draft.newTask,
+                                    ...data.newTask,
+                                ];
+
+                                const mainData = {
+                                    newTask: newData,
+                                };
+                                return mainData;
+                            }
+                        )
+                    );
+                } catch (error) {
+                    pagePatchResult.undo();
+                    console.log(error.message);
+                }
+            },
+        }),
+
+        // getTaskByValue: builder.query({
+        //     query: (value) => {
+        //         return {
+        //             url: `/task?search=${value}`,
+        //         };
+        //     },
+
+        //     async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        //         try {
+        //             const { data: searchData } = await queryFulfilled;
+        //             dispatch(
+        //                 taskApi.util.updateQueryData(
+        //                     "getTask",
+        //                     undefined,
+        //                     (draft) => {
+        //                         return searchData;
+        //                     }
+        //                 )
+        //             );
+        //         } catch (error) {
+        //             console.log(error.message);
+        //         }
+        //     },
+        // }),
 
         addTask: builder.mutation({
             query: (data) => ({
@@ -117,4 +176,6 @@ export const {
     useAddTaskMutation,
     useDeleteTaskMutation,
     useUpDateTaskMutation,
+    useGetTaskPerPageQuery,
+    useGetTaskByValueQuery,
 } = taskApi;

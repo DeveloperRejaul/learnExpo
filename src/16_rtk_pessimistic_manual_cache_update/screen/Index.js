@@ -1,27 +1,59 @@
+import React, { useState, useRef, useEffect } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import { Spinner } from "native-base";
 import { useColorScheme } from "nativewind";
 import { TrashIcon, PencilSquareIcon } from "react-native-heroicons/solid";
 import { StatusBar } from "expo-status-bar";
+import { useDispatch } from "react-redux";
 import {
+    taskApi,
     useDeleteTaskMutation,
     useGetTaskQuery,
 } from "../rtk/futusers/taskSliceApi";
 import HeaderCom from "./HeaderCom";
 import ModelCom from "./ModelCom";
-import { useDispatch } from "react-redux";
 import { showModel } from "../rtk/futusers/taskSlice";
 
 export default function Index() {
     const [task, setTask] = useState();
     const [updateMode, setUpdateMode] = useState(false);
+    const [moreData, setMoreData] = useState(false);
     const [searchInput, setSearchInput] = useState("");
     const [updateId, setUpdateId] = useState(null);
     const { colorScheme } = useColorScheme();
     const dispatch = useDispatch();
-    const { data: taskData, isError, isSuccess, isLoading } = useGetTaskQuery();
-
+    const {
+        data: taskData,
+        isError,
+        isSuccess,
+        isLoading,
+        refetch,
+    } = useGetTaskQuery();
     const [deleteTask, {}] = useDeleteTaskMutation();
+    const totalPages = useRef(null);
+    const timeoutID = useRef();
+    const page = useRef(0);
+    var limit = 10;
+    let content = null;
+
+    useEffect(() => {
+        if (isSuccess) {
+            totalPages.current = Math.ceil(taskData.totalLength / limit);
+        }
+    }, [isSuccess]);
+
+    const handleSearch = (value) => {
+        clearTimeout(timeoutID.current);
+        setSearchInput(value);
+
+        // timeoutID.current = setTimeout(() => {
+        //     dispatch(taskApi.endpoints.getTaskByValue.initiate(searchInput));
+        // }, 1000);
+    };
+
+    const handleFilter = (fd) => {
+        return fd.title.toLowerCase().includes(searchInput.toLowerCase());
+    };
 
     const handleDelete = (id) => {
         deleteTask(id);
@@ -34,24 +66,46 @@ export default function Index() {
     };
 
     const onEndReached = () => {
-        console.log("onEndReached");
+        page.current = page.current + 1;
+        if (page.current < totalPages.current) {
+            setMoreData(true);
+            dispatch(
+                taskApi.endpoints.getTaskPerPage.initiate({
+                    page: page.current,
+                    limit,
+                })
+            );
+        } else {
+            setMoreData(false);
+        }
     };
 
-    let content = null;
     if (isError) {
         content = <Text>Something wrong</Text>;
     }
     if (isLoading) {
-        content = <Text>Loading ...</Text>;
+        content = (
+            <Spinner
+                size={"lg"}
+                accessibilityLabel="Loading posts"
+                alignSelf={"center"}
+            />
+        );
     }
     if (isSuccess) {
         content = (
             <FlatList
+                showsVerticalScrollIndicator={false}
                 onEndReached={onEndReached}
-                // ListFooterComponent={<Text>Loading..</Text>}
-                data={taskData?.newTask?.filter((fd) =>
-                    fd.title.toLowerCase().includes(searchInput.toLowerCase())
-                )}
+                ListFooterComponent={
+                    moreData && (
+                        <Spinner
+                            size={"lg"}
+                            accessibilityLabel="Loading posts"
+                        />
+                    )
+                }
+                data={taskData?.newTask.filter(handleFilter)}
                 keyExtractor={(item) => item?.id}
                 renderItem={({ item }) => (
                     <View className="w-full h-14 bg-green-100 rounded-lg my-3 justify-center px-3 dark:bg-gray-700">
@@ -83,7 +137,7 @@ export default function Index() {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     className="mx-1"
-                                    onPress={() => handleDelete(data.id)}
+                                    onPress={() => handleDelete(item.id)}
                                 >
                                     <TrashIcon color="red" size={30} />
                                 </TouchableOpacity>
@@ -105,7 +159,7 @@ export default function Index() {
             />
             <HeaderCom
                 searchInput={searchInput}
-                setSearchInput={setSearchInput}
+                setSearchInput={(text) => handleSearch(text)}
             />
             <ModelCom
                 task={task}
