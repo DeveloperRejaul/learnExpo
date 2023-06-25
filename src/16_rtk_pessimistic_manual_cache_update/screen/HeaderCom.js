@@ -1,18 +1,18 @@
 import { Switch, View, TouchableOpacity, Text, TextInput } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { useColorScheme } from "nativewind";
-import { useDispatch } from "react-redux";
-import { showModel } from "../rtk/futusers/taskSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { hideSearch, showModel, showSearch } from "../rtk/futusers/taskSlice";
 import { MagnifyingGlassIcon, XMarkIcon } from "react-native-heroicons/solid";
 
 export default function HeaderCom({ searchInput, setSearchInput }) {
-    const [isSearching, setIsSearching] = useState(false);
+    const { isSearch } = useSelector((state) => state.task);
     const { toggleColorScheme, colorScheme } = useColorScheme();
     const dispatch = useDispatch();
 
     const handleClose = () => {
-        setIsSearching(false);
         setSearchInput("");
+        dispatch(hideSearch());
     };
 
     return (
@@ -26,7 +26,7 @@ export default function HeaderCom({ searchInput, setSearchInput }) {
                 </Text>
             </TouchableOpacity>
 
-            {isSearching && (
+            {isSearch && (
                 <View className="flex-row justify-between items-center w-1/2 h-8 border-2 border-gray-400 rounded-md">
                     <TextInput
                         value={searchInput}
@@ -40,11 +40,11 @@ export default function HeaderCom({ searchInput, setSearchInput }) {
             )}
 
             <View className="flex-row justify-center items-center">
-                {isSearching || (
+                {isSearch || (
                     <TouchableOpacity
                         className="mx-1"
                         onPress={() => {
-                            setIsSearching(true);
+                            dispatch(showSearch());
                         }}
                     >
                         <MagnifyingGlassIcon color="#070707" size={30} />

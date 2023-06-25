@@ -3,13 +3,17 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 export const taskApi = createApi({
     reducerPath: "taskApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://172.31.112.1:3004/api",
+        baseUrl: "http://192.168.50.182:3004/api",
     }),
+    tagTypes: ["TASK"],
     endpoints: (builder) => ({
         getTask: builder.query({
-            query: () => ({
-                url: `/task?page=0&limit=10`,
-            }),
+            query: () => {
+                console.log("getTask");
+                return {
+                    url: `/task?page=0&limit=10`,
+                };
+            },
 
             // Modify response with `transformResponse`
             // transformResponse(res, meta) {},
@@ -17,6 +21,7 @@ export const taskApi = createApi({
 
         getTaskPerPage: builder.query({
             query: ({ page, limit }) => {
+                console.log("getTaskPerPage");
                 return { url: `/task?page=${page}&limit=${limit}` };
             },
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -46,30 +51,30 @@ export const taskApi = createApi({
             },
         }),
 
-        // getTaskByValue: builder.query({
-        //     query: (value) => {
-        //         return {
-        //             url: `/task?search=${value}`,
-        //         };
-        //     },
+        getTaskByValue: builder.query({
+            query: (value) => {
+                return {
+                    url: `/task?search=${value}`,
+                };
+            },
 
-        //     async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        //         try {
-        //             const { data: searchData } = await queryFulfilled;
-        //             dispatch(
-        //                 taskApi.util.updateQueryData(
-        //                     "getTask",
-        //                     undefined,
-        //                     (draft) => {
-        //                         return searchData;
-        //                     }
-        //                 )
-        //             );
-        //         } catch (error) {
-        //             console.log(error.message);
-        //         }
-        //     },
-        // }),
+            // async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+            //     try {
+            //         const { data: searchData } = await queryFulfilled;
+            //         dispatch(
+            //             taskApi.util.updateQueryData(
+            //                 "getTask",
+            //                 undefined,
+            //                 (draft) => {
+            //                     return searchData;
+            //                 }
+            //             )
+            //         );
+            //     } catch (error) {
+            //         console.log(error.message);
+            //     }
+            // },
+        }),
 
         addTask: builder.mutation({
             query: (data) => ({

@@ -4,7 +4,7 @@ import { Spinner } from "native-base";
 import { useColorScheme } from "nativewind";
 import { TrashIcon, PencilSquareIcon } from "react-native-heroicons/solid";
 import { StatusBar } from "expo-status-bar";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     taskApi,
     useDeleteTaskMutation,
@@ -17,10 +17,12 @@ import { showModel } from "../rtk/futusers/taskSlice";
 export default function Index() {
     const [task, setTask] = useState();
     const [updateMode, setUpdateMode] = useState(false);
+    const [searchTask, setSearchTask] = useState([]);
     const [moreData, setMoreData] = useState(false);
     const [searchInput, setSearchInput] = useState("");
     const [updateId, setUpdateId] = useState(null);
     const { colorScheme } = useColorScheme();
+    const { isSearch } = useSelector((state) => state.task);
     const dispatch = useDispatch();
     const {
         data: taskData,
@@ -30,8 +32,8 @@ export default function Index() {
         refetch,
     } = useGetTaskQuery();
     const [deleteTask, {}] = useDeleteTaskMutation();
-    const totalPages = useRef(null);
-    const timeoutID = useRef();
+    const totalPages = useRef([]);
+    const timeOutID = useRef();
     const page = useRef(0);
     var limit = 10;
     let content = null;
@@ -43,12 +45,22 @@ export default function Index() {
     }, [isSuccess]);
 
     const handleSearch = (value) => {
-        clearTimeout(timeoutID.current);
         setSearchInput(value);
 
-        // timeoutID.current = setTimeout(() => {
-        //     dispatch(taskApi.endpoints.getTaskByValue.initiate(searchInput));
-        // }, 1000);
+        if (value.length > 0) {
+            clearTimeout(timeOutID.current);
+            timeOutID.current = setTimeout(async () => {
+                try {
+                    dispatch(taskApi.endpoints.getTaskByValue.initiate(value))
+                        .unwrap()
+                        .then((res) => {
+                            setSearchTask([...res.newTask]);
+                        });
+                } catch (error) {
+                    console.log(error.message);
+                }
+            }, 500);
+        }
     };
 
     const handleFilter = (fd) => {
@@ -66,7 +78,10 @@ export default function Index() {
     };
 
     const onEndReached = () => {
+        console.log("onEndReached");
+        console.log("total page: " + totalPages.current);
         page.current = page.current + 1;
+        console.log("Page: " + page.current);
         if (page.current < totalPages.current) {
             setMoreData(true);
             dispatch(
@@ -105,7 +120,7 @@ export default function Index() {
                         />
                     )
                 }
-                data={taskData?.newTask.filter(handleFilter)}
+                data={taskData?.newTask}
                 keyExtractor={(item) => item?.id}
                 renderItem={({ item }) => (
                     <View className="w-full h-14 bg-green-100 rounded-lg my-3 justify-center px-3 dark:bg-gray-700">
@@ -149,6 +164,9 @@ export default function Index() {
         );
     }
 
+    if (isSearch) {
+    }
+
     return (
         <View className="flex-1   bg-green-50 dark:bg-gray-800 mt-3 px-3">
             <StatusBar
@@ -160,6 +178,7 @@ export default function Index() {
             <HeaderCom
                 searchInput={searchInput}
                 setSearchInput={(text) => handleSearch(text)}
+                page={page.current}
             />
             <ModelCom
                 task={task}
@@ -168,7 +187,54 @@ export default function Index() {
                 updateId={updateId}
                 setUpdateMode={setUpdateMode}
             />
-            {content}
+
+            {isSearch && (
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    data={searchTask}
+                    keyExtractor={(item) => item?.id}
+                    renderItem={({ item }) => (
+                        <View className="w-full h-14 bg-green-100 rounded-lg my-3 justify-center px-3 dark:bg-gray-700">
+                            <View className="flex-row justify-between">
+                                <Text
+                                    numberOfLines={1}
+                                    className="font-medium text-lg text-gray-700 dark:text-slate-100"
+                                >
+                                    {item.title}
+                                </Text>
+                                <View className="flex-row ">
+                                    <TouchableOpacity
+                                        className="mx-1"
+                                        onPress={() =>
+                                            handleEdit({
+                                                title: item.title,
+                                                id: item.id,
+                                            })
+                                        }
+                                    >
+                                        <PencilSquareIcon
+                                            color={
+                                                colorScheme === "dark"
+                                                    ? "#020617"
+                                                    : "#000"
+                                            }
+                                            size={30}
+                                        />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        className="mx-1"
+                                        onPress={() => handleDelete(item.id)}
+                                    >
+                                        <TrashIcon color="red" size={30} />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    )}
+                />
+            )}
+
+            {isSearch || content}
         </View>
     );
 }
