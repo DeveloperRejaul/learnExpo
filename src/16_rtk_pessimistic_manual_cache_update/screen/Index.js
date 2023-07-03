@@ -12,17 +12,17 @@ import {
 } from "../rtk/futusers/taskSliceApi";
 import HeaderCom from "./HeaderCom";
 import ModelCom from "./ModelCom";
-import { showModel } from "../rtk/futusers/taskSlice";
+import { setSearchTask, showModel } from "../rtk/futusers/taskSlice";
 
 export default function Index() {
     const [task, setTask] = useState();
     const [updateMode, setUpdateMode] = useState(false);
-    const [searchTask, setSearchTask] = useState([]);
     const [moreData, setMoreData] = useState(false);
     const [searchInput, setSearchInput] = useState("");
     const [updateId, setUpdateId] = useState(null);
     const { colorScheme } = useColorScheme();
     const { isSearch } = useSelector((state) => state.task);
+    const { searchTask } = useSelector((state) => state.task);
     const dispatch = useDispatch();
     const {
         data: taskData,
@@ -54,11 +54,9 @@ export default function Index() {
                     dispatch(taskApi.endpoints.getTaskByValue.initiate(value))
                         .unwrap()
                         .then((res) => {
-                            setSearchTask([...res.newTask]);
+                            dispatch(setSearchTask(res.newTask));
                         });
-                } catch (error) {
-                    console.log(error.message);
-                }
+                } catch (error) {}
             }, 500);
         }
     };
@@ -78,10 +76,7 @@ export default function Index() {
     };
 
     const onEndReached = () => {
-        console.log("onEndReached");
-        console.log("total page: " + totalPages.current);
         page.current = page.current + 1;
-        console.log("Page: " + page.current);
         if (page.current < totalPages.current) {
             setMoreData(true);
             dispatch(
@@ -152,7 +147,9 @@ export default function Index() {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     className="mx-1"
-                                    onPress={() => handleDelete(item.id)}
+                                    onPress={() =>
+                                        handleDelete({ id: item.id })
+                                    }
                                 >
                                     <TrashIcon color="red" size={30} />
                                 </TouchableOpacity>
@@ -163,7 +160,6 @@ export default function Index() {
             />
         );
     }
-
     if (isSearch) {
     }
 
@@ -223,7 +219,12 @@ export default function Index() {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         className="mx-1"
-                                        onPress={() => handleDelete(item.id)}
+                                        onPress={() =>
+                                            handleDelete({
+                                                id: item.id,
+                                                inputValue: searchInput,
+                                            })
+                                        }
                                     >
                                         <TrashIcon color="red" size={30} />
                                     </TouchableOpacity>

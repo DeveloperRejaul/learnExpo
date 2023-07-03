@@ -1,27 +1,25 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
-
+import { deleteSearchTask } from "./taskSlice";
 export const taskApi = createApi({
     reducerPath: "taskApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://192.168.50.182:3004/api",
+        baseUrl: "http://172.31.112.1:3004/api",
     }),
-    tagTypes: ["TASK"],
+
     endpoints: (builder) => ({
         getTask: builder.query({
             query: () => {
-                console.log("getTask");
                 return {
                     url: `/task?page=0&limit=10`,
                 };
             },
 
             // Modify response with `transformResponse`
-            // transformResponse(res, meta) {},
+            // transformResponse(a, meta) {},
         }),
 
         getTaskPerPage: builder.query({
             query: ({ page, limit }) => {
-                console.log("getTaskPerPage");
                 return { url: `/task?page=${page}&limit=${limit}` };
             },
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -46,7 +44,6 @@ export const taskApi = createApi({
                     );
                 } catch (error) {
                     pagePatchResult.undo();
-                    console.log(error.message);
                 }
             },
         }),
@@ -57,23 +54,6 @@ export const taskApi = createApi({
                     url: `/task?search=${value}`,
                 };
             },
-
-            // async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-            //     try {
-            //         const { data: searchData } = await queryFulfilled;
-            //         dispatch(
-            //             taskApi.util.updateQueryData(
-            //                 "getTask",
-            //                 undefined,
-            //                 (draft) => {
-            //                     return searchData;
-            //                 }
-            //             )
-            //         );
-            //     } catch (error) {
-            //         console.log(error.message);
-            //     }
-            // },
         }),
 
         addTask: builder.mutation({
@@ -116,11 +96,13 @@ export const taskApi = createApi({
         }),
 
         deleteTask: builder.mutation({
-            query: (id) => ({
-                url: `/task/${id}`,
-                method: "DELETE",
-            }),
-            async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+            query: ({ id }) => {
+                return {
+                    url: `/task/${id}`,
+                    method: "DELETE",
+                };
+            },
+            async onQueryStarted(arg, { queryFulfilled, dispatch, getState }) {
                 // Optimistic Update
                 const deletePatchResult = dispatch(
                     taskApi.util.updateQueryData(
@@ -128,14 +110,36 @@ export const taskApi = createApi({
                         undefined,
                         (draft) => {
                             const newData = draft?.newTask?.filter(
-                                (data) => data.id !== arg
+                                (data) => data.id !== arg.id
                             );
                             const data = { newTask: newData };
                             return data;
                         }
                     )
                 );
-                queryFulfilled.catch(deletePatchResult.undo);
+
+                try {
+                    await queryFulfilled;
+
+                    if (getState().task.isSearch) {
+                        dispatch(
+                            taskApi.util.updateQueryData(
+                                "getTaskByValue",
+                                arg.inputValue,
+                                (draft) => {
+                                    const newData = draft?.newTask?.filter(
+                                        (data) => data.id !== arg.id
+                                    );
+                                    const data = { newTask: newData };
+                                    return data;
+                                }
+                            )
+                        );
+                        dispatch(deleteSearchTask(arg.id));
+                    }
+                } catch (error) {
+                    deletePatchResult.undo();
+                }
             },
         }),
 
