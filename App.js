@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import Index from "./src/16_rtk_pessimistic_manual_cache_update/screen/Index";
 import { store } from "./src/16_rtk_pessimistic_manual_cache_update/rtk/app/store";
 import FileSystem from "./src/17.FileSystem/FileSystem";
+import Sqlite from "./src/18.sqlite/Sqlite";
 
 const App = () => {
     return (
@@ -15,7 +16,8 @@ const App = () => {
                     {/* <NavigationContainer> */}
                     {/* <Index /> */}
                     {/* </NavigationContainer> */}
-                    <FileSystem/>
+                    {/* <FileSystem/> */}
+                    <Sqlite/>
                 </NativeBaseProvider>
             </Provider>
         </>

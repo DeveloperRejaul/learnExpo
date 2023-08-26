@@ -36,7 +36,6 @@ const createFolder = async()=>{
   }
 }
 
-
   return (
     <View style={{justifyContent:"center", alignItems:"center", flex:1}}>
       <Text style={styles.btn} onPress={createFolder}>create Dir</Text>
