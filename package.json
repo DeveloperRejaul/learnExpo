@@ -16,6 +16,7 @@
         "@react-navigation/native-stack": "^6.9.12",
         "@realm/react": "^0.6.0",
         "@reduxjs/toolkit": "^1.9.3",
+        "@svanboxel/visibility-sensor-react-native": "^1.0.2",
         "expo": "~48.0.9",
         "expo-asset": "~8.9.1",
         "expo-av": "~13.2.1",
