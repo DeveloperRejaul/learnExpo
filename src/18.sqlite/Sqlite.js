@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React,{useEffect} from 'react';
-import * as FileSystem from "expo-file-system";
 import * as SQLite from 'expo-sqlite';
 import { useState } from 'react';
 
@@ -8,7 +7,7 @@ export default function Sqlite() {
     const db = SQLite.openDatabase('db.testDb') ;
     const [items, setItems] = useState([])
 
-    // creating  a names table when app first time run and set data in names state
+    // creating  a databases table  
     useEffect(() => {
         db.transaction( (txn)=> {
           txn.executeSql('CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, count INT)');

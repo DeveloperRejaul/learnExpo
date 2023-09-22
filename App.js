@@ -6,6 +6,7 @@ import Index from "./src/16_rtk_pessimistic_manual_cache_update/screen/Index";
 import { store } from "./src/16_rtk_pessimistic_manual_cache_update/rtk/app/store";
 import FileSystem from "./src/17.FileSystem/FileSystem";
 import Sqlite from "./src/18.sqlite/Sqlite";
+import AutoSlider from "./src/20.dynamic_slider_automation/AutoSlider";
 
 const App = () => {
     return (
@@ -13,11 +14,7 @@ const App = () => {
             <StatusBar style="auto" />
             <Provider store={store}>
                 <NativeBaseProvider>
-                    {/* <NavigationContainer> */}
-                    {/* <Index /> */}
-                    {/* </NavigationContainer> */}
-                    {/* <FileSystem/> */}
-                    <Sqlite/>
+                   <AutoSlider/>
                 </NativeBaseProvider>
             </Provider>
         </>
